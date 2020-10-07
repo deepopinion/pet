@@ -251,6 +251,47 @@ class PVP(ABC):
         return verbalize
 
 
+class HotelsPVP(PVP):
+    VERBALIZER = {
+        "20": "activities",
+        "22": "atmosphere",
+        "6": "amenities",
+        "14": "bathroom",
+        "19": "bed",
+        "7": "breakfast",
+        "4": "clean",
+        "8": "dinner",
+        "15": "drinks",
+        "24": "family",
+        "11": "food",
+        "1": "hotel",
+        "3": "location",
+        "5": "maintenance",
+        "18": "noise",
+        "23": "payment",
+        "17": "public",
+        "10": "reception",
+        "13": "room",
+        "21": "safety",
+        "2": "staff",
+        "12": "value",
+        "9": "view",
+        "25": "wellness",
+        "16": "internet"
+    }
+
+    def get_parts(self, example: InputExample) -> FilledPattern:
+        text = self.shortenable(example.text_a)
+
+        if self.pattern_id == 0:
+            return [text, '. I am talking about', self.mask, '.'], []
+        else:
+            raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
+
+    def verbalize(self, label) -> List[str]:
+        return HotelsPVP.VERBALIZER[label]
+
+
 class AgnewsPVP(PVP):
     VERBALIZER = {
         "1": ["World"],
@@ -613,6 +654,7 @@ class RecordPVP(PVP):
 
 
 PVPS = {
+    'hotels': HotelsPVP,
     'agnews': AgnewsPVP,
     'mnli': MnliPVP,
     'yelp-polarity': YelpPolarityPVP,

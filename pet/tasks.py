@@ -120,6 +120,41 @@ class DataProcessor(ABC):
         pass
 
 
+class HotelsProcessor(DataProcessor):
+    """Processor for deep opinion data"""
+
+    def get_train_examples(self, data_dir):
+        return self._create_examples(os.path.join(data_dir, "train.csv"), "train")
+
+    def get_dev_examples(self, data_dir):
+        return self._create_examples(os.path.join(data_dir, "test.csv"), "dev")
+
+    def get_test_examples(self, data_dir) -> List[InputExample]:
+        raise NotImplementedError()
+
+    def get_unlabeled_examples(self, data_dir) -> List[InputExample]:
+        return self.get_train_examples(data_dir)
+
+    def get_labels(self):
+        return [str(i) for i in range(1, 26)]
+
+    @staticmethod
+    def _create_examples(path: str, set_type: str) -> List[InputExample]:
+        examples = []
+
+        with open(path) as f:
+            reader = csv.reader(f, delimiter=',')
+            for idx, row in enumerate(reader):
+                label, body = row
+                guid = "%s-%s" % (set_type, idx)
+                text_a = body.replace('\\n', ' ').replace('\\', ' ')
+
+                example = InputExample(guid=guid, text_a=text_a, label=label)
+                examples.append(example)
+
+        return examples
+
+
 class MnliProcessor(DataProcessor):
     """Processor for the MultiNLI data set (GLUE version)."""
 
@@ -281,7 +316,6 @@ class YelpPolarityProcessor(DataProcessor):
                 examples.append(example)
 
         return examples
-
 
 class YelpFullProcessor(YelpPolarityProcessor):
     """Processor for the YELP full classification set."""
@@ -763,6 +797,7 @@ class RecordProcessor(DataProcessor):
 
 
 PROCESSORS = {
+    "hotels": HotelsProcessor,
     "mnli": MnliProcessor,
     "mnli-mm": MnliMismatchedProcessor,
     "agnews": AgnewsProcessor,
