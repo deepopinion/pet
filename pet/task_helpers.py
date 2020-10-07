@@ -94,7 +94,7 @@ class WicTaskHelper(TaskHelper):
     def get_sequence_classifier_inputs(self, example: InputExample) -> Dict[str, Any]:
         text_a = example.meta['word'] + ': ' + example.text_a
         return self.wrapper.tokenizer.encode_plus(text_a, example.text_b, add_special_tokens=True,
-                                                  max_length=self.wrapper.config.max_seq_length)
+                                                  max_length=self.wrapper.config.max_seq_length, truncation=True)
 
 
 class MultiRcTaskHelper(TaskHelper):
@@ -111,7 +111,7 @@ class MultiRcTaskHelper(TaskHelper):
         text_b = ' '.join([example.text_b, self.wrapper.tokenizer.sep_token, example.meta['answer']])
 
         return self.wrapper.tokenizer.encode_plus(text_a, text_b, add_special_tokens=True,
-                                                  max_length=self.wrapper.config.max_seq_length)
+                                                  max_length=self.wrapper.config.max_seq_length, truncation=True)
 
 
 class CopaTaskHelper(TaskHelper):
@@ -124,7 +124,7 @@ class CopaTaskHelper(TaskHelper):
         joiner = 'because' if question == 'cause' else 'so'
         text_a, text_b = ' '.join([premise, joiner, choice1]), ' '.join([premise, joiner, choice2])
         return self.wrapper.tokenizer.encode_plus(text_a, text_b, add_special_tokens=True,
-                                                  max_length=self.wrapper.config.max_seq_length)
+                                                  max_length=self.wrapper.config.max_seq_length, truncation=True)
 
     def train_step(self, batch, **kwargs) -> Optional[torch.Tensor]:
         if self.wrapper.config.wrapper_type == 'sequence_classifier':
@@ -240,7 +240,7 @@ class WscTaskHelper(TaskHelper):
         text_b = target
 
         return self.wrapper.tokenizer.encode_plus(text_a, text_b, add_special_tokens=True,
-                                                  max_length=self.wrapper.config.max_seq_length)
+                                                  max_length=self.wrapper.config.max_seq_length, truncation=True)
 
     def add_special_input_features(self, input_example: InputExample, input_features: InputFeatures) -> None:
         if self.wrapper.config.wrapper_type == 'sequence_classifier':
