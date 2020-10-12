@@ -253,31 +253,31 @@ class PVP(ABC):
 
 class HotelsPVP(PVP):
     VERBALIZER = {
-        "20": "activities",
-        "22": "atmosphere",
-        "6": "amenities",
-        "14": "bathroom",
-        "19": "bed",
-        "7": "breakfast",
-        "4": "clean",
+        "1": "activities",
+        "2": "atmosphere",
+        "3": "amenities",
+        "4": "bathroom",
+        "5": "bed",
+        "6": "breakfast",
+        "7": "clean",
         "8": "dinner",
-        "15": "drinks",
-        "24": "family",
+        "9": "drinks",
+        "10": "family",
         "11": "food",
-        "1": "hotel",
-        "3": "location",
-        "5": "maintenance",
-        "18": "noise",
-        "23": "payment",
+        "12": "hotel",
+        "13": "location",
+        "14": "maintenance",
+        "15": "noise",
+        "16": "payment",
         "17": "public",
-        "10": "reception",
-        "13": "room",
-        "21": "safety",
-        "2": "staff",
-        "12": "value",
-        "9": "view",
-        "25": "wellness",
-        "16": "internet"
+        "18": "reception",
+        "19": "room",
+        "20": "safety",
+        "21": "staff",
+        "22": "value",
+        "23": "view",
+        "24": "wellness",
+        "25": "internet"
     }
 
     def get_parts(self, example: InputExample) -> FilledPattern:
@@ -285,6 +285,8 @@ class HotelsPVP(PVP):
 
         if self.pattern_id == 0:
             return [text, '. I am talking about', self.mask, '.'], []
+        elif self.pattern_id == 1:
+            return [text, '. ', self.mask, '!'], []
         else:
             raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
 
